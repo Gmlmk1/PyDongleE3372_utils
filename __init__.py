@@ -12,7 +12,7 @@ def require(cond, msg):
         raise Exception(msg)
     
 class DongleE3372:
-    __ver = (0,1)
+    __ver = (0,1,1)
     __slots__ = ["session", "gateway", "sesInfo", "tokInfo"]
     
     __api_points = {
@@ -60,16 +60,7 @@ class DongleE3372:
         resp = self.get_request(api)
         return resp  
 
-    def now_time(self) -> int:
-        return int(datetime.now().timestamp())
-
-    def ts_2_str(self, timestamp: int) -> str:
-        #"yyyy-MM-dd HH:mm:ss"
-        dt = datetime.fromtimestamp(timestamp)
-        str_time = dt.strftime("%Y-%m-%d %H:%M:%S")
-        return str_time
-
-    def send_sms(self, phone_num: Union[str, list[str]] , message: int):
+    def send_sms(self, phone_num: Union[str, list[str]] , message: str):
         require(len(message) <= 64, "too big message")
         now = self.now_time()
         number = phone_num
@@ -96,4 +87,13 @@ class DongleE3372:
         resp = self.get_request(api)
         return resp
 
-    
+    def now_time(self) -> int:
+        return int(datetime.now().timestamp())
+
+    def time_2_str(self, time: Union[int, datetime]) -> str:
+        #"yyyy-MM-dd HH:mm:ss"
+        dt = time
+        if isinstance(time, int):
+            dt = datetime.fromtimestamp(time)
+        str_time = dt.strftime("%Y-%m-%d %H:%M:%S")
+        return str_time
